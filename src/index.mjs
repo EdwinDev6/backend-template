@@ -1,6 +1,5 @@
 import app from "./server.mjs";
 import { cManager } from "./databases/connections.mjs";
-import { connectToBridgeDB } from "./databases/bridge_database.mjs";
 import { PORT } from './config.mjs';
 
 
