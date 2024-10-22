@@ -20,7 +20,7 @@ const exitHandler = () => {
       process.exit(1);
     }
   };
-  
+
   const unexpectedErrorHandler = (error) => {
     console.log(error)
     exitHandler();
