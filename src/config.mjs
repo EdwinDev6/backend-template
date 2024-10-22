@@ -1,6 +1,7 @@
 //Server variables
 export const PORT = parseInt(process.env.PORT) || 8000;
 export const SESSION_SECRET = process.env.SESSION_SECRET;
+export const ENVIRONMENT = process.env.NODE_ENV || "development";
 
 
 //Database variables
