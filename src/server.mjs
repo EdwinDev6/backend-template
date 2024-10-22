@@ -49,8 +49,5 @@ app.disable("x-powered by");
 // Add routes
 app.use("/api", loginRouter);
 app.use("/api", homeRouter);
-app.use('/', (request, response) => {
-    request.session.visited = true;
-})
 
 export default app;
