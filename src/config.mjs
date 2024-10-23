@@ -4,6 +4,9 @@ export const SESSION_SECRET = process.env.SESSION_SECRET;
 export const PARSER_SECRET = process.env.PARSER_SECRET;
 export const ENVIRONMENT = process.env.NODE_ENV || "development";
 
+//Frontend variables
+export const FRONTEND_URL = process.env.FRONTEND_URL
+
 //Database variables
 export const DB_SERVER = process.env.DB_SERVER;
 export const DB_PORT = parseInt(process.env.DB_PORT);
