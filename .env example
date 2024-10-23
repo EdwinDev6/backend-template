@@ -1,2 +1,15 @@
+#Server port
+PORT = 
+PARSER_SECRET = ""
+SESSION_SECRET = ""
 
-PORT = (Number between 5000 and 9999)
+
+#Frontend 
+FRONTEND_URL = ""
+
+#Database
+DB_SERVER=""
+DB_PORT=56433
+DB_NAME=""
+DB_USER=""
+DB_PWD=""

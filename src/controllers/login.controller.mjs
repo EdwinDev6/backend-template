@@ -1,5 +1,6 @@
 import {cManager} from '../databases/connections.mjs';
 export const login = async (req, res) => {
+  console.log(req)
   const { username, password } = req.body;
   try {
     const pool = await cManager.pools.bridge;
