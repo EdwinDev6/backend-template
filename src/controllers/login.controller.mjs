@@ -1,6 +1,8 @@
-import {cManager} from '../databases/connections.mjs';
+import jwt from "jsonwebtoken";
+import { cManager } from "../databases/connections.mjs";
+import { JWT_SECRET, REFRESH_JWT_SECRET } from "../config.mjs";
+
 export const login = async (req, res) => {
-  console.log(req)
   const { username, password } = req.body;
   try {
     const pool = await cManager.pools.bridge;
@@ -27,15 +29,27 @@ export const login = async (req, res) => {
       },
     };
     await cManager.connectToDB(dbConfig.database, dbConfig);
-    req.session.visited = true;
-    req.session.user = {
-      id: "",
-      user: username,
-      db: connectionInfo.base_datos,
-    }
-    return res.status(200).json({ message: "Login success" });
+    const accessToken = jwt.sign(
+      {
+        username: username,
+        database: connectionInfo.base_datos,
+      },
+      JWT_SECRET,
+      {expiresIn: '5m'}
+    );
+    // const refreshToken = jwt.sign(
+    //   {
+    //     username: username,
+    //     databaseName: connectionInfo.base_datos,
+    //   },
+    //   REFRESH_JWT_SECRET,
+    //   {expiresIn: '2h'}
+    // );
+    return res.status(200).json({ message: "Login success",
+                                  user: username,
+                                  accessToken: accessToken
+     });
   } catch (err) {
-    console.log(err);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };

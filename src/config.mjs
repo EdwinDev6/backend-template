@@ -1,11 +1,12 @@
 //Server variables
 export const PORT = parseInt(process.env.PORT) || 8000;
-export const SESSION_SECRET = process.env.SESSION_SECRET;
+export const JWT_SECRET = process.env.JWT_SECRET;
+export const REFRESH_JWT_SECRET = process.env.REFRESH_JWT_SECRET
 export const PARSER_SECRET = process.env.PARSER_SECRET;
 export const ENVIRONMENT = process.env.NODE_ENV || "development";
 
 //Frontend variables
-export const FRONTEND_URL = process.env.FRONTEND_URL
+export const FRONTEND_URL = process.env.FRONTEND_URL;
 
 //Database variables
 export const DB_SERVER = process.env.DB_SERVER;
@@ -16,7 +17,7 @@ export const DB_PWD = process.env.DB_PWD;
 
 const required = {
   PARSER_SECRET,
-  SESSION_SECRET,
+  JWT_SECRET,
   DB_SERVER,
   DB_PORT,
   DB_NAME,
