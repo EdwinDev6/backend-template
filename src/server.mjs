@@ -1,10 +1,10 @@
 import express from "express";
 import helmet from "helmet";
-import { JWT_SECRET, PARSER_SECRET, ENVIRONMENT, FRONTEND_URL } from "./config.mjs";
+import { PARSER_SECRET, ENVIRONMENT, FRONTEND_URL } from "./config.mjs";
 import { loginRouter } from "./routes/login.routes.mjs";
-import { homeRouter }  from "./routes/home.routes.mjs";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { procedureRouter } from "./routes/procedure.routes.mjs";
 
 const app = express();
 
@@ -28,7 +28,7 @@ app.disable("x-powered by");
 
 // Add routes
 app.use("/api", loginRouter);
-app.use("/api", homeRouter);
+app.use("/api", procedureRouter)
 
 
 export default app;
