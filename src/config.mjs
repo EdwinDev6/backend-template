@@ -1,7 +1,7 @@
 //Server variables
 export const PORT = parseInt(process.env.PORT) || 8000;
 export const JWT_SECRET = process.env.JWT_SECRET;
-export const REFRESH_JWT_SECRET = process.env.REFRESH_JWT_SECRET
+export const REFRESH_JWT_SECRET = process.env.REFRESH_JWT_SECRET;
 export const PARSER_SECRET = process.env.PARSER_SECRET;
 export const ENVIRONMENT = process.env.NODE_ENV || "development";
 

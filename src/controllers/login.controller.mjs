@@ -9,8 +9,9 @@ export const login = async (req, res) => {
     .request()
     .input("usuario", username)
     .input("contrasena", password)
-    .execute(`dbo.p_traer_conexion_usuario_autenticar`).catch((error) => {
-      return res.status(500).json("Internal Server error")
+    .execute(`dbo.p_traer_conexion_usuario_autenticar`)
+    .catch((error) => {
+      return res.status(500).json("Internal Server error");
     });
   const connectionInfo = result.recordset[0];
   if (connectionInfo.error) {
@@ -36,12 +37,12 @@ export const login = async (req, res) => {
     .input("renglon", "USUARIO")
     .execute(`${schema}.p_traer_usuario_autenticar`)
     .then((result) => {
-      let r =  result["recordsets"][0][0]
+      let r = result["recordsets"][0][0];
       const accessToken = jwt.sign(
         {
           username: username,
           database: connectionInfo.base_datos,
-          user_id: r["id_usuario"]
+          user_id: r["id_usuario"],
         },
         JWT_SECRET,
         { expiresIn: "15m" }
@@ -49,8 +50,8 @@ export const login = async (req, res) => {
       return res.status(200).json({
         message: "Login success",
         accessToken: accessToken,
-        user_information: r
-      })
+        user_information: r,
+      });
       // const refreshToken = jwt.sign(
       //   {
       //     username: username,

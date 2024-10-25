@@ -20,9 +20,8 @@ export const getProceduresParams = async (req, res) => {
     const db = req.database;
     const pool = await cManager.connectToDB(db);
     const { procedureName } = req.params;
-    const result = await pool
-      .request()
-      .input("procedureName", procedureName).query(`
+    const result = await pool.request().input("procedureName", procedureName)
+      .query(`
         SELECT DISTINCT PARAMETER_NAME, DATA_TYPE 
         FROM INFORMATION_SCHEMA.PARAMETERS 
         WHERE SPECIFIC_NAME = @procedureName
@@ -46,7 +45,21 @@ export const getProceduresParams = async (req, res) => {
 };
 
 export const executeProcedure = async (req, res) => {
+  const procedureName = req.body["procedureName"];
+  const procedureParams = req.body["procedureParams"];
   const db = req.database;
   const pool = await cManager.connectToDB(db);
-  // const result = await pool.request()
+  const request = pool.request();
+  for (let [key, value] of Object.entries(procedureParams)) {
+    request.input(key, value);
+  }
+  request
+    .execute(procedureName)
+    .then((result) => {
+      res.status(200).json({ message: "ok", result: result });
+    })
+    .catch((error) => {
+      res.status(400).json({ message: "Bad request" });
+    });
+  //  const result = await pool.request()
 };

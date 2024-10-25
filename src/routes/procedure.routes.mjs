@@ -17,7 +17,7 @@ procedureRouter.get(
   getProceduresParams
 );
 procedureRouter.post(
-  "/procedures/excecute",
+  "/procedures/execute",
   verifyJWT,
   verifyDB,
   executeProcedure
