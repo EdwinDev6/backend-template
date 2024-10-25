@@ -45,8 +45,16 @@ export const getProceduresParams = async (req, res) => {
 };
 
 export const executeProcedure = async (req, res) => {
-  const procedureName = req.body["procedureName"];
-  const procedureParams = req.body["procedureParams"];
+  const procedureName =
+    req.body["procedureName"] || req.body["nombreProcedimiento"];
+  const procedureParams =
+    req.body["procedureParams"] || req.body["parametrosProcedimiento"];
+  const schema = req.schema || "dbo";
+  if (!procedureName) {
+    return res
+      .status(400)
+      .json({ error: "No se ha enviado el nombre del procedimiento" });
+  }
   const db = req.database;
   const pool = await cManager.connectToDB(db);
   const request = pool.request();
@@ -54,12 +62,17 @@ export const executeProcedure = async (req, res) => {
     request.input(key, value);
   }
   request
-    .execute(procedureName)
+    .execute(`${schema}.${procedureName}`)
     .then((result) => {
-      res.status(200).json({ message: "ok", result: result });
+      res.status(200).json({ result: result["recordset"] });
     })
     .catch((error) => {
-      res.status(400).json({ message: "Bad request" });
+      if (error.number === 8145) {
+        return res.status(400).json({ message: error.message });
+      }
+      if (error.number === 2812) {
+        return res.status(400).json({ message: error.message });
+      }
+      return res.status(400).json({ message: "Bad request" });
     });
-  //  const result = await pool.request()
 };
