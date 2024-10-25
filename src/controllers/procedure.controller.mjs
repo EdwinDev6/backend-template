@@ -1,5 +1,4 @@
 import { cManager } from "../databases/connections.mjs";
-import sql from "mssql";
 export const getProcedures = async (req, res) => {
   try {
     const db = req.database;
@@ -17,15 +16,13 @@ export const getProcedures = async (req, res) => {
 };
 
 export const getProceduresParams = async (req, res) => {
-  console.log(req)
-  const db = req.database;
-  const pool = await cManager.connectToDB(db);
   try {
-    console.log(req)
+    const db = req.database;
+    const pool = await cManager.connectToDB(db);
     const { procedureName } = req.params;
     const result = await pool
       .request()
-      .input("procedureName", sql.VarChar, procedureName).query(`
+      .input("procedureName", procedureName).query(`
         SELECT DISTINCT PARAMETER_NAME, DATA_TYPE 
         FROM INFORMATION_SCHEMA.PARAMETERS 
         WHERE SPECIFIC_NAME = @procedureName
