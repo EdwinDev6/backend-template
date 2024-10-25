@@ -9,6 +9,7 @@ export const verifyJWT = (req, res, next) => {
     if (err) return res.status(403);
     req.user = decoded.username;
     req.database = decoded.database;
+    req.schema = decoded.schema;
     next();
   });
 };

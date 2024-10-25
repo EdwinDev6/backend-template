@@ -47,10 +47,11 @@ export const getProceduresParams = async (req, res) => {
 export const executeProcedure = async (req, res) => {
   const procedureName = req.body["procedureName"];
   const procedureParams = req.body["procedureParams"];
+  const schema = req.schema || "dbo";
   const db = req.database;
   const pool = await cManager.connectToDB(db);
   const request = pool.request();
-  for (let [key, value] of Object.entries(procedureParams)) {
+  for (let [key, value] of Object.entries(`${schema}.${procedureParams}`)) {
     request.input(key, value);
   }
   request
@@ -61,5 +62,4 @@ export const executeProcedure = async (req, res) => {
     .catch((error) => {
       res.status(400).json({ message: "Bad request" });
     });
-  //  const result = await pool.request()
 };
