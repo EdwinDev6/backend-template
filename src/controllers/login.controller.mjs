@@ -36,10 +36,12 @@ export const login = async (req, res) => {
     .input("renglon", "USUARIO")
     .execute(`${schema}.p_traer_usuario_autenticar`)
     .then((result) => {
+      let r =  result["recordsets"][0][0]
       const accessToken = jwt.sign(
         {
           username: username,
           database: connectionInfo.base_datos,
+          user_id: r["id_usuario"]
         },
         JWT_SECRET,
         { expiresIn: "15m" }
@@ -47,7 +49,7 @@ export const login = async (req, res) => {
       return res.status(200).json({
         message: "Login success",
         accessToken: accessToken,
-        result: result["recordsets"][0][0]
+        user_information: r
       })
       // const refreshToken = jwt.sign(
       //   {

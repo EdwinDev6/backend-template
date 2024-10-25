@@ -50,4 +50,12 @@ export class ConnectionsManager {
     }
     return this.pools.others.get(name);
   };
+
+  checkDB = (databaseName) => {
+    if (this.pools.others.has(databaseName)){
+      return true
+    }else{
+      return false
+    }
+  }
 }
