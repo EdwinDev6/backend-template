@@ -58,7 +58,7 @@ export const executeProcedure = async (req, res) => {
   const db = req.database;
   const pool = await cManager.connectToDB(db);
   const request = pool.request();
-  for (let [key, value] of Object.entries(procedureParams)) {
+  for (let [key, value] of Object.entries(`${schema}.${procedureParams}`)) {
     request.input(key, value);
   }
   request
