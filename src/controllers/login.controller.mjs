@@ -3,7 +3,7 @@ import { cManager } from "../databases/connections.mjs";
 import { JWT_SECRET, REFRESH_JWT_SECRET } from "../config.mjs";
 
 export const login = async (req, res) => {
-  const { username, password, schema } = req.body;
+  const { username, password } = req.body;
   const pool = await cManager.pools.bridge;
   const result = await pool
     .request()
@@ -35,7 +35,7 @@ export const login = async (req, res) => {
     .input("usuario", username)
     .input("contrasena", password)
     .input("renglon", "USUARIO")
-    .execute(`${schema}.p_traer_usuario_autenticar`)
+    .execute(`p_traer_usuario_autenticar`)
     .then((result) => {
       let r = result["recordsets"][0][0];
       const accessToken = jwt.sign(
@@ -47,10 +47,10 @@ export const login = async (req, res) => {
         JWT_SECRET,
         { expiresIn: "15m" }
       );
+      res.cookie('Auth', accessToken, {httpOnly: true}) 
       return res.status(200).json({
         message: "Login success",
-        accessToken: accessToken,
-        user_information: r,
+        user: r,
       });
       // const refreshToken = jwt.sign(
       //   {

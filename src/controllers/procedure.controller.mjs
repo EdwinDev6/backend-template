@@ -49,7 +49,6 @@ export const executeProcedure = async (req, res) => {
     req.body["procedureName"] || req.body["nombreProcedimiento"];
   const procedureParams =
     req.body["procedureParams"] || req.body["parametrosProcedimiento"];
-  const schema = req.schema || "dbo";
   if (!procedureName) {
     return res
       .status(400)
@@ -62,7 +61,7 @@ export const executeProcedure = async (req, res) => {
     request.input(key, value);
   }
   request
-    .execute(`${schema}.${procedureName}`)
+    .execute(procedureName)
     .then((result) => {
       res.status(200).json({ result: result["recordset"] });
     })
