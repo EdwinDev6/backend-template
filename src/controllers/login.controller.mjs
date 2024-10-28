@@ -47,7 +47,7 @@ export const login = async (req, res) => {
         JWT_SECRET,
         { expiresIn: "15m" }
       );
-      res.cookie('Auth', accessToken, { httpOnly: true }); 
+      res.cookie('Auth', accessToken, { httpOnly: true, secure: true }); 
       return res.status(200).json({
         message: "Login success",
         user: r,
@@ -62,6 +62,7 @@ export const login = async (req, res) => {
       // );
     })
     .catch((err) => {
+      console.log(err)
       return res.status(402).json({ error: "Bad request" });
     });
 };
