@@ -19,8 +19,8 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: FRONTEND_URL,
-  })
+    origin: FRONTEND_URL, credentials: true
+  }) 
 );
 
 //Reduces fingerprinting
