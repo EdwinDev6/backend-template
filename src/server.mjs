@@ -5,6 +5,7 @@ import { loginRouter } from "./routes/login.routes.mjs";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { procedureRouter } from "./routes/procedure.routes.mjs";
+import morgan from "morgan";
 
 const app = express();
 
@@ -13,14 +14,16 @@ if (ENVIRONMENT === "production") {
 
 app.use(express.json());
 app.use(cookieParser(PARSER_SECRET));
-
+// use morgan to log requests to the console
+app.use(morgan("dev"));
 //Helper to send http headers appropiately
 app.use(helmet());
 
 app.use(
   cors({
-    origin: FRONTEND_URL, credentials: true
-  }) 
+    origin: FRONTEND_URL,
+    credentials: true,
+  })
 );
 
 //Reduces fingerprinting
