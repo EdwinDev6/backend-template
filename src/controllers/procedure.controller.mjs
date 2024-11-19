@@ -57,13 +57,14 @@ export const executeProcedure = async (req, res) => {
   const db = req.database;
   const pool = await cManager.connectToDB(db);
   const request = pool.request();
+  request.input("id_usuario", req?.user_id)
   for (let [key, value] of Object.entries(procedureParams)) {
     request.input(key, value);
   }
   request
     .execute(procedureName)
     .then((result) => {
-      res.status(200).json({ result: result["recordset"] });
+      res.status(200).json({ result: result });
     })
     .catch((error) => {
       if (error.number === 8145) {

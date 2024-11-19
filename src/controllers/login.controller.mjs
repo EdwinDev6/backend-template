@@ -3,7 +3,8 @@ import { cManager } from "../databases/connections.mjs";
 import { JWT_SECRET, REFRESH_JWT_SECRET } from "../config.mjs";
 
 export const login = async (req, res) => {
-  const { username, password } = req.body;
+  const username = req.body?.username || req.body?.usuario
+  const password = req.body?.password || req.body?.contrasena
   const pool = await cManager.pools.bridge;
   const result = await pool
     .request()
@@ -41,8 +42,8 @@ export const login = async (req, res) => {
       const accessToken = jwt.sign(
         {
           username: username,
-          database: connectionInfo.base_datos,
           user_id: r["id_usuario"],
+          database: connectionInfo.base_datos,
         },
         JWT_SECRET,
         { expiresIn: "15m" }

@@ -5,7 +5,7 @@ export const verifyDB = (req, res, next) => {
     next();
   } else {
     return res
-      .status(409)
+      .status(302)
       .json({ mesage: "Server had a restart, please relog" });
   }
 };

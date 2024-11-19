@@ -1,11 +1,11 @@
 import express from "express";
 import helmet from "helmet";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
 import { PARSER_SECRET, ENVIRONMENT, FRONTEND_URL } from "./config.mjs";
 import { loginRouter } from "./routes/login.routes.mjs";
-import cookieParser from "cookie-parser";
-import cors from "cors";
 import { procedureRouter } from "./routes/procedure.routes.mjs";
-import morgan from "morgan";
 
 const app = express();
 
