@@ -47,21 +47,30 @@ export const getProceduresParams = async (req, res) => {
 export const executeProcedure = async (req, res) => {
   const procedureName =
     req.body["procedureName"] || req.body["nombreProcedimiento"];
+
   const procedureParams =
-    req.body["procedureParams"] || req.body["parametrosProcedimiento"];
-  const schema = req.body["schema"] || req.body["esquema"] || "dbo"
+    req.body["procedureParams"] || req.body["parametrosProcedimiento"] || {};
+
+  const schema = req.body["schema"] || req.body["esquema"] || "dbo";
+
   if (!procedureName) {
     return res
       .status(400)
       .json({ error: "No se ha enviado el nombre del procedimiento" });
   }
+
   const db = req.database;
   const pool = await cManager.connectToDB(db);
   const request = pool.request();
-  request.input("id_usuario", req?.user_id)
-  for (let [key, value] of Object.entries(procedureParams)) {
-    request.input(key, value);
+
+  request.input("id_usuario", req?.user_id);
+
+  if (Object.keys(procedureParams).length != 0 && procedureParams.constructor === Object) {
+    for (let [key, value] of Object.entries(procedureParams)) {
+      request.input(key, value);
+    }
   }
+
   request
     .execute(`${schema}.${procedureName}`)
     .then((result) => {
