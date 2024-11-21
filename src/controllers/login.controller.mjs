@@ -5,6 +5,9 @@ import { JWT_SECRET, REFRESH_JWT_SECRET } from "../config.mjs";
 export const login = async (req, res) => {
   const username = req.body?.username || req.body?.usuario
   const password = req.body?.password || req.body?.contrasena
+  if (typeof(username) != 'string' && typeof(password) != 'string'){
+    return res.status(402)
+  }
   const pool = await cManager.pools.bridge;
   const result = await pool
     .request()
@@ -53,14 +56,6 @@ export const login = async (req, res) => {
         message: "Login success",
         user: r,
       });
-      // const refreshToken = jwt.sign(
-      //   {
-      //     username: username,
-      //     databaseName: connectionInfo.base_datos,
-      //   },
-      //   REFRESH_JWT_SECRET,
-      //   {expiresIn: '2h'}
-      // );
     })
     .catch((err) => {
       console.log(err)
