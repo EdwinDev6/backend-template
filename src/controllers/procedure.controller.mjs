@@ -15,35 +15,6 @@ export const getProcedures = async (req, res) => {
   }
 };
 
-export const getProceduresParams = async (req, res) => {
-  try {
-    const db = req.database;
-    const pool = await cManager.connectToDB(db);
-    const { procedureName } = req.params;
-    const result = await pool.request().input("procedureName", procedureName)
-      .query(`
-        SELECT DISTINCT PARAMETER_NAME, DATA_TYPE 
-        FROM INFORMATION_SCHEMA.PARAMETERS 
-        WHERE SPECIFIC_NAME = @procedureName
-      `);
-    if (result.recordset.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "No parameters found for this procedure" });
-    }
-
-    const filteredParams = result.recordset.filter(
-      (param) =>
-        param.PARAMETER_NAME !== "@renglon" &&
-        param.PARAMETER_NAME !== "@programa"
-    );
-
-    res.status(200).json(filteredParams);
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-};
-
 export const executeProcedure = async (req, res) => {
   const procedureName =
     req.body["procedureName"] || req.body["nombreProcedimiento"];
@@ -51,7 +22,7 @@ export const executeProcedure = async (req, res) => {
   const procedureParams =
     req.body["procedureParams"] || req.body["parametrosProcedimiento"] || {};
 
-  const schema = req.body["schema"] || req.body["esquema"] || "dbo";
+  const schema = req.schema || "dbo"
 
   if (!procedureName) {
     return res
@@ -74,7 +45,7 @@ export const executeProcedure = async (req, res) => {
   request
     .execute(`${schema}.${procedureName}`)
     .then((result) => {
-      res.status(200).json({ result: result });
+      res.status(200).json({ message: "Procedure was excecuted sucessfully", data: result });
     })
     .catch((error) => {
       if (error.number === 8145) {
