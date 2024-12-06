@@ -65,7 +65,7 @@ export const login = async (req, res) => {
           schema: schema
         },
         JWT_SECRET,
-        { expiresIn: "15m" }
+        { expiresIn: "2h" }
       );
       res.cookie("Auth", accessToken, { httpOnly: true, secure: true });
       return res.status(200).json({

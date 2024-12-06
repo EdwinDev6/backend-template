@@ -4,7 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { PARSER_SECRET, ENVIRONMENT, FRONTEND_URL } from "./config.mjs";
-import { loginRouter } from "./routes/login.routes.mjs";
+import { authRouter } from "./routes/auth.routes.mjs";
 import { procedureRouter } from "./routes/procedure.routes.mjs";
 
 const app = express();
@@ -30,7 +30,7 @@ app.use(
 app.disable("x-powered by");
 
 // Add routes
-app.use("/api", loginRouter);
+app.use("/api", authRouter);
 app.use("/api", procedureRouter);
 
 export default app;
