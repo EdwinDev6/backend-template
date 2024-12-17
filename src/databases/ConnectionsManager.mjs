@@ -22,8 +22,8 @@ export class ConnectionsManager {
           console.log("Connections manager added bridge pool");
         }
       });
-      this.pools.bridge = pool.connect()
-      return this.pools.bridge
+      this.pools.bridge = pool.connect();
+      return this.pools.bridge;
     }
   };
 
@@ -49,5 +49,13 @@ export class ConnectionsManager {
       this.pools.others.set(name, pool.connect());
     }
     return this.pools.others.get(name);
+  };
+
+  checkDB = (databaseName) => {
+    if (this.pools.others.has(databaseName)) {
+      return true;
+    } else {
+      return false;
+    }
   };
 }

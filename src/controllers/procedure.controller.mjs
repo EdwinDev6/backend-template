@@ -1,5 +1,4 @@
 import { cManager } from "../databases/connections.mjs";
-import sql from "mssql";
 export const getProcedures = async (req, res) => {
   try {
     const db = req.database;
@@ -16,40 +15,45 @@ export const getProcedures = async (req, res) => {
   }
 };
 
-export const getProceduresParams = async (req, res) => {
-  console.log(req)
-  const db = req.database;
-  const pool = await cManager.connectToDB(db);
-  try {
-    console.log(req)
-    const { procedureName } = req.params;
-    const result = await pool
-      .request()
-      .input("procedureName", sql.VarChar, procedureName).query(`
-        SELECT DISTINCT PARAMETER_NAME, DATA_TYPE 
-        FROM INFORMATION_SCHEMA.PARAMETERS 
-        WHERE SPECIFIC_NAME = @procedureName
-      `);
-    if (result.recordset.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "No parameters found for this procedure" });
-    }
-
-    const filteredParams = result.recordset.filter(
-      (param) =>
-        param.PARAMETER_NAME !== "@renglon" &&
-        param.PARAMETER_NAME !== "@programa"
-    );
-
-    res.status(200).json(filteredParams);
-  } catch (err) {
-    res.status(500).json({ message: err });
-  }
-};
-
 export const executeProcedure = async (req, res) => {
+  const procedureName =
+    req.body["procedureName"] || req.body["nombreProcedimiento"];
+
+  const procedureParams =
+    req.body["procedureParams"] || req.body["parametrosProcedimiento"] || {};
+
+  const schema = req.schema || "dbo"
+
+  if (!procedureName) {
+    return res
+      .status(400)
+      .json({ error: "No se ha enviado el nombre del procedimiento" });
+  }
+
   const db = req.database;
   const pool = await cManager.connectToDB(db);
-  // const result = await pool.request()
+  const request = pool.request();
+
+  request.input("id_usuario", req?.user_id);
+
+  if (Object.keys(procedureParams).length != 0 && procedureParams.constructor === Object) {
+    for (let [key, value] of Object.entries(procedureParams)) {
+      request.input(key, value);
+    }
+  }
+
+  request
+    .execute(`${schema}.${procedureName}`)
+    .then((result) => {
+      res.status(200).json({ message: "Procedure was excecuted sucessfully", data: result });
+    })
+    .catch((error) => {
+      if (error.number === 8145) {
+        return res.status(400).json({ message: error.message });
+      }
+      if (error.number === 2812) {
+        return res.status(400).json({ message: error.message });
+      }
+      return res.status(400).json({ message: "Bad request" });
+    });
 };
